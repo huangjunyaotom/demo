@@ -1,0 +1,353 @@
+<!-- Nav tabs -->
+<ul class="nav nav-tabs">
+	<li class="nav-item">
+		<a class="nav-link active" data-toggle="tab" href="#baseInfo">基本信息</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link  <#if !goods??>disabled</#if>" data-toggle="tab" href="#pic">图片</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link  <#if !goods??>disabled</#if>" data-toggle="tab" href="#supplier">供应商</a>
+	</li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+<!-- 基本信息 -->
+	<div class="tab-pane active container" id="baseInfo">
+		<form action="/goods/save/info" method="post" id="goods_edit">
+			<input type="hidden" name="goodsId" value="<#if goods??>${goods.goodsId!}</#if>" />
+			<div class="form-group">
+				<label for="goodsNo">货号:</label> 
+				<input type="text" class="form-control" name="goodsNo" value="<#if goods??>${goods.goodsNo!}</#if>" />
+			</div>
+			<div class="form-group">
+				<label for="goodsName">品名:</label>
+				<input type="text" class="form-control" name="goodsName" required value="<#if goods??>${goods.goodsName!}</#if>" />
+			</div>
+			<div class="form-group">
+				<label for="note">备注:</label>
+				<input type="text" class="form-control" name="note" value="<#if goods??>${goods.note!}</#if>"/>
+			</div>
+			<div class="btn-group">
+				<a href="/goods/create"><button type="button">新建</button></a>
+				<button type="submit">保存</button>
+				<button onClick="window.close();" type="button">关闭</button>
+			</div>
+		</form>
+	</div>
+	
+<!-- 	图片 -->
+	<div class="tab-pane container" id="pic">
+		<form enctype="multipart/form-data" method="post" action="/goods/save/pic">
+			<div class="form-group">
+				<#if goods??>	
+					<img src="${goods.goodsPic!}" class="img-thumbnail"	style="width: 300px; height: 300px" id="current_img">	
+					<input type="hidden" name="goodsId" value="${goods.goodsId}"/>	
+				</#if>
+				
+				<label for="file">图片:</label> <input type="file" class="form-control"
+					name="file">	
+			</div>
+			<button type="submit">保存</button>
+		</form>
+	</div>
+	
+<!-- 	供应商信息 -->
+	<div class="tab-pane container" id="supplier">
+		<div class="form-group">
+			<div class="btn-group" role="group">
+			<button type="button"class="btn btn-default" id="goods_edit_new">新建</button>
+			<button type="button" class="btn btn-default blank_check" id="goods_edit_edit">编辑</button>
+			<button type="button" class="btn btn-default blank_check" id="goods_edit_delete">删除</button>
+		</div>
+		<table class="table table-hover table-bordered" id="goods_edit_supplier_table">
+			<thead>
+					<tr>
+						<th>供应商</th>
+						<th>链接</th>
+						<th>价格</th>
+						<th>备注</th>
+						
+					</tr>
+			</thead>
+			<tbody id="goods_edit_supplier_tbody">
+			
+				<#if goods.goodsAndSupplier??>
+					<#list goods.goodsAndSupplier as supplier>
+						<tr data-supplier="${supplier.goodsandsupplierId}">
+							<td>${supplier.supplier.supplierName!}</td>
+							<td><a href="${supplier.goodsLink!}" target="_blank">链接</a></td>
+							<td>${supplier.price!}</td>
+							<td>${supplier.note!}</td>
+						</tr>
+					</#list>
+				</#if>
+			
+			</tbody>
+		</table>
+		
+		</div>
+	</div>
+</div>
+	
+	
+	
+<script>
+$(document).ready(function(){
+	//选择行标记
+	$("#goods_edit_supplier_tbody tr").click(function(){
+		$(this).siblings().removeClass('table-info');
+		$(this).addClass('table-info');
+	});
+	
+	
+	//选择行检查
+	function check_choose(){
+		var num=$(".table-info").length;
+		if(num==0){
+			layer.alert('你必须先选择一条记录');
+			return false;
+		}
+		return true;
+		
+	}
+	//删除绑定事件
+	$("#goods_edit_delete").click(function(){
+		if(!check_choose()){
+			return false;
+		}
+		layer.confirm('确定删除吗?',function(){
+			var goodsandsupplierId=$(".table-info").attr("data-supplier");
+// 			console.log(goodsandsupplierId);
+			$.get("/goodsAndSupplier/"+goodsandsupplierId+"/delete",function(data){
+				$(".table-info").remove();
+				layer.msg('删除成功');
+			})
+			
+		});
+		
+	});
+	//新建绑定事件
+	$("#goods_edit_new").click(function(){
+		<#if goods??>
+			var goodsId=${goods.goodsId};
+		</#if>
+		
+		var supplier_index=layer.open({
+			type:1,
+			title:'产品供应商编辑',
+			area:['500px','auto'],
+			btn:['保存','取消'],
+			yes:function(){
+				var supplier_new_goodsId=$('[name="goodsAndSupplier.goods.goodsId"]').val();
+				var supplier_new_supplierId=$('[name="goodsAndSupplier.supplier.supplierId"]').val();
+				var supplier_new_supplierName=$('[name="goodsAndSupplier.supplier.supplierName"]').val();
+				var supplier_new_goodsLink=$('[name="goodsAndSupplier.goodsLink"]').val();
+				var supplier_new_price=$('[name="goodsAndSupplier.price"]').val();
+				var supplier_new_note=$('[name="goodsAndSupplier.note"]').val();
+				param={
+					"goods.goodsId":supplier_new_goodsId,
+					"supplier.supplierId":supplier_new_supplierId,
+					"supplier.supplierName":supplier_new_supplierName,
+					"goodsLink":supplier_new_goodsLink,
+					"price":supplier_new_price,
+					"note":supplier_new_note
+				};
+// 				console.log(param);
+				$.ajax({
+					url:'/goodsAndSupplier/save',
+					type: 'POST',
+					data:param,
+					success:function(data){
+						
+						var str='<tr data-supplier='+data.goodsandsupplierId+'</td>'+
+									'<td>'+data.supplier.supplierName+'</td>'+
+									'<td><a href="'+data.goodsLink+'" target="_blank">链接</a></td>'+
+									'<td>'+data.price+'</td>'+
+									'<td>'+data.note+'</td>'+
+								'</tr>';
+						$("#goods_edit_supplier_tbody").append(str);
+						layer.msg("保存成功");
+						layer.close(supplier_index);
+					}
+					});
+				
+			},
+			btn2:function(){
+				layer.close(supplier_index);
+			},
+			content:	'<div class="form-group">'+ 
+							'<input type="hidden" name="goodsAndSupplier.goods.goodsId" value=${goods.goodsId} />'+
+						'</div>'+						
+						'<div class="form-group">'+ 
+							'<label for="goodsAndSupplier.supplier.supplierId">供应商:</label>'+ 
+							'<input type="hidden" name="goodsAndSupplier.supplier.supplierId"/>'+
+							'<input type="text" name="goodsAndSupplier.supplier.supplierName" disabled/>'+
+							'<button id="goods_edit_supplier_select">选择</button>'+
+						'</div>'+ 
+						'<div class="form-group">'+ 
+							'<label for="goodsAndSupplier.goodsLink">链接:</label>'+ 
+							'<input type="url" name="goodsAndSupplier.goodsLink" />'+
+							'</div>'+ 
+						'<div class="form-group">'+ 
+							'<label for="goodsAndSupplier.price">价格:</label>'+ 
+							'<input type="text" name="goodsAndSupplier.price" pattern="^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$" />'+
+						'</div>'+ 
+						'<div class="form-group">'+ 
+							'<label for="goodsAndSupplier.note">备注:</label>'+ 
+							'<input type="text" name="goodsAndSupplier.note" />'+
+						'</div>',
+			zIndex: layer.zIndex, //重点1
+			success: function(layero){
+			   			 layer.setTop(layero); //重点2
+			   		//选择供应商
+			   			$("#goods_edit_supplier_select").click(function(){
+			   				var choose_supplier_index=layer.open({
+			   					type:1,
+			   					title:'供应商列表',
+			   					area:['600px','400px'],
+			   					content: '<div class="row">'+
+			   					'<input type="text" placeholder="输入品名查询" name="supplier_param"/>'+
+			   						'<button id="supplier_param_button_search">查询</button>'+
+			   						'<button id="supplier_param_button_new">新建</button>'+
+			   					'</div>'+
+			   					'<div class="row">'+
+			   						'<table class="table table-hover table-bordered">'+
+			   							'<thead>'+
+			   									'<tr>'+
+			   									'	<th>供应商</th>'+
+			   									'	<th>备注</th>'+
+			   									'</tr>'+
+			   							'</thead>'+
+			   							'<tbody id="supplier_list">'+
+			   							'</tbody>'+
+			   						'</table>'+
+			   					'</div>'+
+								'<div class="row">'+
+											'<ul class="pagination">'+
+												'<li class="page-item"><a class="page-link" href="#" id="supplier_list_firstPage">首页</a></li>'+
+												'<li class="page-item"><a class="page-link" href="#" id="supplier_list_prePage">上一页</a></li>'+
+												'<li class="page-item"><a class="page-link" href="#" id="supplier_list_nextPage">下一页</a></li>'+
+												'<li class="page-item"><a class="page-link" href="#" id="supplier_list_lastPage">尾页</a></li>'+
+											'</ul>'+
+								'</div>',
+			   					zIndex: layer.zIndex, //重点1
+			   					success: function(layero){
+			   					   		layer.setTop(layero); //重点2
+			   					   
+			   					   		$.get('/supplier',function(result){
+			   					   			supplier_render(result,choose_supplier_index);
+			   					   		});
+			   					   		
+			   					   		
+			   					   		//绑定查询事件
+			   					   		$("#supplier_param_button_search").click(function(){
+			   					   			var param=$("[name='supplier_param']").val();
+			   					   			$.get('/supplier/toPage/0/search/'+param,function(result){
+			   					   				supplier_render(result);
+			   					   			});
+			   					   		});
+			   					   		
+			   					   					   					   		
+			   					   		//绑定新建事件
+			   					   		$("#supplier_param_button_new").click(function(){
+			   					   			var supplier_new_index=layer.open({
+			   					   				type:1,
+				   					   			title:'产品供应商编辑',
+				   								area:['500px','auto'],
+				   								content:'<form action="/supplier/save" method="post">'+
+								   								'<div class="form-group">'+
+								   								'<label for="supplierName">名称:</label> '+
+								   								'<input type="text" class="form-control" name="supplierName"  />'+
+								   							'</div>'+
+								   							'<div class="form-group">'+
+								   								'<label for="supplierLink">链接:</label>'+
+								   								'<input type="url" class="form-control" name="supplierLink" required  />'+
+								   							'</div>'+
+								   							'<div class="form-group">'+
+								   								'<label for="note">备注:</label>'+
+								   								'<input type="text" class="form-control" name="note" />'+
+								   							'</div>'+
+								   							'<div class="btn-group">'+
+								   								'<button type="submit" id="supplier_new_save">保存</button>'+
+								   								'<button type="button" id="supplier_new_close">关闭</button>'+
+								   							'</div>'+
+								   						'</form>',
+								   				zIndex: layer.zIndex, //重点1
+				   								success: function(layero){
+							   					   		layer.setTop(layero); 
+							   					   		$("#supplier_new_close").click(function(){
+							   					   			layer.close(supplier_new_index);
+							   					   		});
+							   					   		$("[action='/supplier/save']").submit(function(){
+							   					   			var data=$(this).serialize();
+							   					   			$.post('/supplier/save',data,function(supplier){
+							   					   				var supplier_tbody='<tr data-supplierId="'+supplier.supplierId+'" data-supplierName="'+supplier.supplierName+'">'+
+												   									'	<th><a target="_blank" href="'+supplier.supplierLink+'" >'+supplier.supplierName+'</a></th>'+
+												   									'	<th>'+supplier.note+'</th>'+
+												   									'</tr>';
+							   					   			$("#supplier_list").append(supplier_tbody);
+							   					   					layer.close(supplier_new_index);
+							   					   			});
+							   					   			return false;
+							   					   		});
+							   					}
+				   					   		});
+			   					   		});
+			   					   		//绑定翻页事件
+			   					   		
+			   					   		$(".page-link").click(function(){
+				   					   		$.get($(this).attr("href"),function(result){
+			   					   				supplier_render(result,choose_supplier_index);
+			   					   			});
+			   					   			return false;
+			   					   		});
+			   					   		//绑定双击事件
+			   					   		
+			   					   		
+			   					}
+			   				});
+			   				
+			   				
+			   			});
+			}
+		});
+	});
+	
+	function supplier_render(result,index){
+		
+	   		
+		$("#supplier_list_firstPage").attr("href",result.firsrPage);
+		$("#supplier_list_prePage").attr("href",result.prePage);
+		$("#supplier_list_nextPage").attr("href",result.nextPage);
+		$("#supplier_list_lastPage").attr("href",result.lastPage);
+		
+		
+		
+		
+		//加载供应商列表
+		if(result.resultList.length>0){
+			$("#supplier_list").empty();
+			var supplier_tbody="";
+			$.each(result.resultList,function(index,supplier){
+				supplier_tbody+='<tr class="supplier_detail" data-supplierId="'+supplier.supplierId+'" data-supplierName="'+supplier.supplierName+'">'+
+								'	<th><a target="_blank" href="'+supplier.supplierLink+'" >'+supplier.supplierName+'</a></th>'+
+								'	<th>'+supplier.note+'</th>'+
+								'</tr>';
+			});
+			$("#supplier_list").append(supplier_tbody);
+			$(".supplier_detail").dblclick(function(){
+		   			var supplierId=$(this).attr("data-supplierId");
+		   			var supplierName=$(this).attr("data-supplierName");
+		   			$('[name="goodsAndSupplier.supplier.supplierId"]').val(supplierId);
+		 		  	$('[name="goodsAndSupplier.supplier.supplierName"]').val(supplierName);
+		   			layer.close(index);
+		   	});
+		}
+			
+	}
+	
+	
+});
+</script>

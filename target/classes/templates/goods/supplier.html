@@ -1,0 +1,45 @@
+<div class="row">
+	<input type="text" placeholder="输入品名查询" name="supplier_param"/>
+	<button id="supplier_param_button_search">查询</button>
+	<button id="supplier_param_button_new">新建</button>
+</div>
+<div class="row">
+	<table class="table table-hover table-bordered">
+		<thead>
+				<tr>
+					<th>供应商</th>
+					<th>备注</th>
+				</tr>
+		</thead>
+		<tbody id="supplier_list">
+		</tbody>
+	</table>
+</div>
+<div class="row">
+			<ul class="pagination">
+				<li class="page-item"><a class="page-link" href="#" id="supplier_list_firstPage">首页</a></li>
+				<li class="page-item"><a class="page-link" href="#" id="supplier_list_prePage">上一页</a></li>
+				<li class="page-item"><a class="page-link" href="#" id="supplier_list_nextPage">下一页</a></li>
+				<li class="page-item"><a class="page-link" href="#" id="supplier_list_lastPage">尾页</a></li>
+			</ul>
+</div>
+
+<form action="/supplier/save" method="post">
+			<div class="form-group">
+				<label for="supplierName">名称:</label> 
+				<input type="text" class="form-control" name="supplierName"  />
+			</div>
+			<div class="form-group">
+				<label for="supplierLink">链接:</label>
+				<input type="text" class="form-control" name="supplierLink" required  />
+			</div>
+			<div class="form-group">
+				<label for="note">备注:</label>
+				<input type="text" class="form-control" name="note" />
+			</div>
+			<div class="btn-group">
+				<button type="submit">保存</button>
+				<button type="button">关闭</button>
+			</div>
+		
+</form>
