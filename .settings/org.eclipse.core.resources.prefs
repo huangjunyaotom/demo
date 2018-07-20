@@ -4,6 +4,7 @@ encoding//src/main/resources=UTF-8
 encoding//src/main/resources/templates/goods/edit.html=UTF-8
 encoding//src/main/resources/templates/goods/manager.html=UTF-8
 encoding//src/main/resources/templates/goodsandsupplier/manager.html=UTF-8
+encoding//src/main/resources/templates/supplier/edit.html=UTF-8
 encoding//src/main/resources/templates/supplier/manager.html=UTF-8
 encoding//src/test/java=UTF-8
 encoding/<project>=UTF-8

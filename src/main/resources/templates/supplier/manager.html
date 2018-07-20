@@ -5,7 +5,7 @@
 			<button @click="search">搜索</button>
 		</div>
 		<div class="btn-group" role="group" aria-label="Basic example">
-		  <button type="button" class="btn btn-secondary">新建</button>
+		  <button type="button" class="btn btn-secondary" @click="newSupplier">新建</button>
 		  <button type="button" class="btn btn-secondary">编辑</button>
 		  <button type="button" class="btn btn-secondary" @click="deleteSupplier">删除</button>
 		</div>
@@ -19,7 +19,7 @@
 					</tr>
 			</thead>
 			<tbody>
-				<tr  v-for='supplier in supplierList'  @click="change(supplier.supplierId)" :class="{'table-info': currentId == supplier.supplierId }">
+				<tr  v-for='(supplier,index) in supplierList'  @click="change(supplier.supplierId,index)" :class="{'table-info': currentId == supplier.supplierId }">
 					<td><a target="_blank" v-bind:href="supplier.supplierLink">{{supplier.supplierName}}</a></td>
 					<td>{{supplier.note}}</td>
 				</tr>
@@ -37,12 +37,13 @@
 	</div>
 </div>
 <script>
-new Vue({
+var vm=new Vue({
 	el:'#supplierManager',
 	data:{
 		supplierList:[],
 		pageList:[],
 		currentId:-2,
+		currentIndex:-1,
 		param:""
 	},
 	created:function(){
@@ -62,8 +63,9 @@ new Vue({
 				{link:result.lastPage,name:'尾页'}
 			];
 		},
-		change:function(id){
+		change:function(id,index){
 			this.currentId=id;
+			this.currentIndex=index;
 		},
 		getSupplierList:function(link){
 			var self = this; 
@@ -97,12 +99,24 @@ new Vue({
 							axios.get('/supplier/delete/'+self.currentId)
 							.then(function(msg){
 								layer.msg(msg.data);
+								//讲数据删除
+								self.supplierList.splice(self.currentIndex,1);
 							});
+						});
+					}else{
+						axios.get('/supplier/delete/'+self.currentId)
+						.then(function(msg){
+							layer.msg(msg.data);
+							console.log(self.currentIndex);
+							self.supplierList.splice(self.currentIndex,1);
 						});
 					}
 				});
 			}
 			
+		},
+		newSupplier:function(){
+			window.location.href='supplier/new';
 		}
 		
 	}

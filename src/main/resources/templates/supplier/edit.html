@@ -1,0 +1,63 @@
+<div id="supplierEdit">
+	<form>
+		<input type="hidden" v-model.trim="supplierId"/>
+	  <div class="form-group">
+	    <label for="supplierName">供应商名称</label>
+	    <input type="text" class="form-control"  v-model.trim="supplierName" placeholder="输入供应商名称" />
+	  </div>
+	  <div class="form-group">
+	    <label for="supplierLink">供应商网址</label>
+	    <input type="text" class="form-control"  v-model.trim="supplierLink" placeholder="供应商网址"/>
+	  </div>
+	  <div class="form-group">
+	    <label for="note">备注</label>
+	    <input type="text" class="form-control"  v-model.trim="note" placeholder="备注"/>
+	  </div>
+	  <button @click="newSupplier">新建</button>
+	  <button @click.prevent="saveSupplier">保存</button>
+	  <button @click.prevent="closeSupplier">取消</button>
+	</form>
+</div>
+<script>
+new Vue({
+	el:'#supplierEdit',
+	data:{
+		supplierId:null,
+		supplierName:"",
+		supplierLink:"",
+		note:""
+	},
+	methods:{
+		saveSupplier:function(){
+			var self=this;
+			axios({
+				method: 'POST',
+				headers: { 'content-type': 'application/x-www-form-urlencoded' },
+				url:'/supplier/save',
+				params:{
+					supplierId:self.supplierId,
+					supplierName:self.supplierName,
+					supplierLink:self.supplierLink,
+					note:self.note
+				}
+			}).then(function(result){
+// 						console.log(result.data);
+						self.supplierId=result.data.supplierId;
+						self.supplierName=result.data.supplierName;
+						self.supplierLink=result.data.supplierLink;
+						self.note=result.data.note;
+						
+			});
+		},
+		newSupplier:function(){
+			this.supplierId=null;
+			this.supplierName="";
+			this.supplierLink="";
+			this.note="";
+		},
+		closeSupplier:function(){
+			history.back();
+		}
+	}
+});
+</script>

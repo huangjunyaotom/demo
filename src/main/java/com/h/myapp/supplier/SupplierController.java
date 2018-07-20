@@ -21,7 +21,7 @@ public class SupplierController {
 	private SupplierService supplierService;
 
 	@GetMapping("")
-	public String show(Result<Supplier> result,Model model) {
+	public String show(Model model) {
 		model.addAttribute("menuShow", "/supplier/manager.html");
 		return "menu";
 	}
@@ -53,20 +53,26 @@ public class SupplierController {
 		result.setLastPage("/supplier/toPage/" + totalPage + "/search/" + param);
 		return result;
 	}
-	
+
+	@GetMapping("/new")
+	public String newSupplier(Model model) {
+		model.addAttribute("menuShow", "/supplier/edit.html");
+		return "menu";
+	}
+
 	@PostMapping("/save")
 	@ResponseBody
 	public Supplier save(Supplier supplier) {
-//		System.out.println(supplier);
+		System.out.println(supplier);
 		return supplierService.save(supplier);
 	}
-	
+
 	@GetMapping("/count/{supplierId}")
 	@ResponseBody
 	public Integer countGoods(@PathVariable Integer supplierId) {
 		return supplierService.countGoods(supplierId);
 	}
-	
+
 	@GetMapping("/delete/{supplierId}")
 	@ResponseBody
 	public String delete(@PathVariable Integer supplierId) {
