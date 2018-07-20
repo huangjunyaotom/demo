@@ -1,12 +1,20 @@
 package com.h.myapp.supplier;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.h.myapp.goodsandsupplier.GoodsAndSupplier;
 
 @Entity(name = "tsupplier")
 public class Supplier implements Serializable {
@@ -24,7 +32,9 @@ public class Supplier implements Serializable {
 	private String supplierLink="#";
 	private String note="";
 
-	
+	@OneToMany(targetEntity = GoodsAndSupplier.class, cascade = CascadeType.ALL, mappedBy = "supplier",fetch=FetchType.LAZY)
+	@JsonIgnore
+	private List<GoodsAndSupplier> goodsAndSupplier = new ArrayList<GoodsAndSupplier>();
 
 	public String getNote() {
 		return note;
@@ -36,10 +46,20 @@ public class Supplier implements Serializable {
 
 	
 
+	
+
+	public List<GoodsAndSupplier> getGoodsAndSupplier() {
+		return goodsAndSupplier;
+	}
+
+	public void setGoodsAndSupplier(List<GoodsAndSupplier> goodsAndSupplier) {
+		this.goodsAndSupplier = goodsAndSupplier;
+	}
+
 	@Override
 	public String toString() {
 		return "Supplier [supplierId=" + supplierId + ", supplierName=" + supplierName + ", supplierLink="
-				+ supplierLink + ", note=" + note + "]";
+				+ supplierLink + ", note=" + note + ", goodsAndSupplier=" + goodsAndSupplier + "]";
 	}
 
 	@Override

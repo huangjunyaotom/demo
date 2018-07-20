@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,9 +21,9 @@ public class SupplierController {
 	private SupplierService supplierService;
 
 	@GetMapping("")
-	@ResponseBody
-	public Result<Supplier> show(Result<Supplier> result) {
-		return toPage(0, result);
+	public String show(Result<Supplier> result,Model model) {
+		model.addAttribute("menuShow", "/supplier/manager.html");
+		return "menu";
 	}
 
 	@GetMapping("/toPage/{toPage}")
@@ -56,7 +57,19 @@ public class SupplierController {
 	@PostMapping("/save")
 	@ResponseBody
 	public Supplier save(Supplier supplier) {
-		System.out.println(supplier);
+//		System.out.println(supplier);
 		return supplierService.save(supplier);
+	}
+	
+	@GetMapping("/count/{supplierId}")
+	@ResponseBody
+	public Integer countGoods(@PathVariable Integer supplierId) {
+		return supplierService.countGoods(supplierId);
+	}
+	
+	@GetMapping("/delete/{supplierId}")
+	@ResponseBody
+	public String delete(@PathVariable Integer supplierId) {
+		return supplierService.delete(supplierId);
 	}
 }

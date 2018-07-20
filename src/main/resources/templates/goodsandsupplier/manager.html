@@ -1,0 +1,89 @@
+<div id="vueSupplier">
+
+<div class="row">
+	<input v-model="param" placeholder="货号,品名,供应商名" />
+	<button @click="search">搜索</button>
+</div>
+<div class="row" >
+	<table class="table table_hover table_bordered">
+		<thead>
+				<tr>
+					<th>货号</th>
+					<th>品名</th>
+					<th>供应商</th>
+					<th>价格</th>
+					<th>备注</th>
+				</tr>
+		</thead>
+		<tbody>
+			<tr  v-for='(goodsandsupplier,index) in resultList'  @click="change(index)" :class="{'table-info': isActive == index }">
+				<td>{{goodsandsupplier.goods.goodsNo}}</td>
+				<td>{{goodsandsupplier.goods.goodsName}}</td>
+				<td><a target="_blank" v-bind:href="goodsandsupplier.goodsLink">{{goodsandsupplier.supplier.supplierName}}</a></td>
+				<td>{{goodsandsupplier.price}}</td>
+				<td>{{goodsandsupplier.note}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="row">
+			<ul class="pagination">
+				<li class="page-item" 
+				v-for="page in pageList"
+				><a class="page-link" v-bind:href="page.link" v-on:click.prevent="getSupplierList(page.link)">{{page.name}}</a></li>
+				
+			</ul>
+	</div>
+</div>
+</div>
+<script>
+	var vueSupplier=new Vue({
+		el:'#vueSupplier',
+		data:{
+			resultList:[],
+			pageList:[],
+			param:"",
+			isActive:11
+			},
+		created:function(){
+			var self = this;  
+			axios.get('/goodsAndSupplier/toPage/0').then(function(result){
+				self.setResult(result.data);
+			});
+		},
+		methods:{
+			setResult:function(result){
+				var self = this; 
+				self.resultList=result.resultList;
+				self.pageList=[
+					{link:result.firstPage,name:'首页'},
+					{link:result.prePage,name:'上一页'},
+					{link:result.nextPage,name:'下一页'},
+					{link:result.lastPage,name:'尾页'}
+				];
+			},
+			getSupplierList:function(link){
+				var self = this; 
+				axios.get(link).then(function(result){
+					self.setResult(result.data);
+				});
+				
+			},
+			search:function(){
+				var self=this;
+// 				console.log(self.param);
+				if(self.param.length>0){
+					axios.get('/goodsAndSupplier/toPage/0/search/'+self.param)
+					.then(function(result){
+						self.setResult(result.data);
+					});
+				}else{
+					layer.alert("请输入需要查询的词");
+				}
+				
+			},
+			change:function(index){
+				this.isActive=index;
+			}
+		}
+	});
+</script>

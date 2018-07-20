@@ -10,10 +10,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.h.myapp.goodsandsupplier.GoodsAndSupplierRepository;
+
 @Service
 public class SupplierServiceImpl implements SupplierService {
 	@Autowired
 	private SupplierRepository supplierRepository;
+	@Autowired
+	private GoodsAndSupplierRepository goodsAndSupplierRepository;
+	
 	@Value("${my.defaultPageSize}")
 	private Integer pageSize;
 	@Override
@@ -39,6 +44,19 @@ public class SupplierServiceImpl implements SupplierService {
 	public Supplier save(Supplier supplier) {
 		// TODO Auto-generated method stub
 		return supplierRepository.save(supplier);
+	}
+
+	@Override
+	public Integer countGoods(Integer supplierId) {
+		// TODO Auto-generated method stub
+		return goodsAndSupplierRepository.countBySupplier_supplierId(supplierId);
+	}
+
+	@Override
+	public String delete(Integer supplierId) {
+		// TODO Auto-generated method stub
+		supplierRepository.deleteById(supplierId);
+		return "删除成功";
 	}
 
 }

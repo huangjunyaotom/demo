@@ -12,16 +12,53 @@
 <script src="/js/bootstrap/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
 <script src="/js/layer/layer.js"></script>
+<!-- vue插件-->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<!-- vue路由插件 -->
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+<!-- 服务请求插件 -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
 	<div class="container-fluid">
 		<!-- 导航栏 -->
-		<#include "/common/nav.html">
-		
+		<div class="row" id="nav">
+			<nav class="navbar navbar-expand-sm navbar-default">
+				<ul class="navbar-nav">
+					 <nav-detail  v-for="item in items" v-bind:item="item" v-bind:key="item.id" ></nav-detail>
+				</ul>
+			</nav>
+		</div>
+
 			<#include menuShow!>
 		
 	</div>
 	
 
 </body>
+<script>
+
+Vue.component('nav-detail',{
+	props:['item'],
+	template:'<li class="nav-item dropdown" >\
+				<a class="nav-link" v-bind:href="item.href" >{{item.name}}</a>\
+			  </li>'
+});
+
+new Vue({
+	el:'#nav',
+	data:{
+		items:[
+			{id:1,href:'/goods',name:'产品档案'},
+			{id:2,href:'/goodsAndSupplier',name:'产品链接'},
+			{id:3,href:'/supplier',name:'供应商档案'},
+			{id:4,href:'/#',name:'客户管理'},
+			{id:5,href:'/#',name:'新建订单'},
+			{id:6,href:'/#',name:'订单操作'},
+			{id:7,href:'/#',name:'订单查询'}
+		]
+	}
+});
+
+</script>
 </html>

@@ -236,7 +236,7 @@ $(document).ready(function(){
 			   					success: function(layero){
 			   					   		layer.setTop(layero); //重点2
 			   					   
-			   					   		$.get('/supplier',function(result){
+			   					   		$.get('/supplier/toPage/0',function(result){
 			   					   			supplier_render(result,choose_supplier_index);
 			   					   		});
 			   					   		

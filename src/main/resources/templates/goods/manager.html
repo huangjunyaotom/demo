@@ -64,52 +64,23 @@
 	</div>
 </div>
 <script>
-	$(document)
-			.ready(
-					function() {
-						$("#table_goods tbody tr")
-								.click(
-										function() {
-											$(this).siblings().removeClass(
-													"table-info");
+	$(document).ready(function() {
+						$("#table_goods tbody tr").click(function(){
+											$(this).siblings().removeClass("table-info");
 											$(this).addClass("table-info");
-											var goodsId = $(this).attr(
-													"data-goodsId");
+											var goodsId = $(this).attr("data-goodsId");
 											if (goodsId != null) {
-												$("#current_img").attr("src",
-														"");
-												$("#goods_manager_a_edit")
-														.attr(
-																"href",
-																"/goods/edit/"
-																		+ goodsId);
-												$
-														.get(
-																"/goods/"
-																		+ goodsId,
-																function(data,
-																		status) {
-																	$(
-																			"#current_img")
-																			.attr(
-																					"src",
-																					data.goodsPic);
-																});
+												$("#current_img").attr("src","");
+												$("#goods_manager_a_edit").attr("href","/goods/edit/"+ goodsId);
+												$.get("/goods/"+ goodsId,function(data,status) {
+																	$("#current_img").attr("src",data.goodsPic);
+												});
 												$("#current_supplier").empty();
-												$
-														.get(
-																"/goodsAndSupplier/goodsId/"
-																		+ goodsId,
-																function(data,
-																		status) {
+												$.get("/goodsAndSupplier/goodsId/"+ goodsId,
+																function(data,tatus) {
 																	if (data.length > 0) {
 																		var supplierHtml = "";
-																		$
-																				.each(
-																						data,
-																						function(
-																								index,
-																								goodsAndSupplier) {
+																		$.each(data,function(index,goodsAndSupplier) {
 																							supplierHtml += "<tr>"
 																									+ "<td><a href="+goodsAndSupplier.goodsLink +" target='_blank'>"
 																									+ goodsAndSupplier.supplier.supplierName
@@ -122,10 +93,7 @@
 																									+ "</td>"
 																									+ "</tr>";
 																						});
-																		$(
-																				"#current_supplier")
-																				.append(
-																						supplierHtml);
+																		$("#current_supplier").append(supplierHtml);
 																	}
 																});
 											}
@@ -151,8 +119,7 @@
 										return false;
 									}
 								
-									layer.confirm('确认删除吗?'
-											,function(){
+									layer.confirm('确认删除吗?',function(){
 												$.get("/goods/delete/"+ $(".table-info").attr("data-goodsId"),function(data, status) {
 													layer.msg(data);
 													$(".table-info").remove();

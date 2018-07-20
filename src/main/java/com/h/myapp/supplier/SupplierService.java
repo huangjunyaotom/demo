@@ -7,6 +7,7 @@ public interface SupplierService {
 	Page<Supplier> findAllToPage(int toPage);
 	Page<Supplier> search(String param,Pageable pageable);
 	Page<Supplier> search(Integer toPage,String param);
-	
+	Integer countGoods(Integer supplierId);
+	String delete(Integer supplierId);
 	Supplier save(Supplier supplier);
 }
