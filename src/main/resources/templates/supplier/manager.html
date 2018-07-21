@@ -6,7 +6,7 @@
 		</div>
 		<div class="btn-group" role="group" aria-label="Basic example">
 		  <button type="button" class="btn btn-secondary" @click="newSupplier">新建</button>
-		  <button type="button" class="btn btn-secondary">编辑</button>
+		  <button type="button" class="btn btn-secondary" @click="editSupplier">编辑</button>
 		  <button type="button" class="btn btn-secondary" @click="deleteSupplier">删除</button>
 		</div>
 	</div>
@@ -117,6 +117,15 @@ var vm=new Vue({
 		},
 		newSupplier:function(){
 			window.location.href='supplier/new';
+		},
+		editSupplier:function(){
+			if(this.currentId<0){
+				layer.alert('请先选择一条记录');
+			}else{
+				sessionStorage.setItem('supplier',JSON.stringify(this.supplierList[this.currentIndex]));
+				window.location.href='supplier/new';
+			}
+			
 		}
 		
 	}

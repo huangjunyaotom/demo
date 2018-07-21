@@ -27,6 +27,16 @@ new Vue({
 		supplierLink:"",
 		note:""
 	},
+	created:function(){
+		var supplier=JSON.parse(sessionStorage.getItem('supplier'));
+		if(supplier!=null){
+			this.supplierId=supplier.supplierId;
+			this.supplierName=supplier.supplierName;
+			this.supplierLink=supplier.supplierLink;
+			this.note=supplier.note;
+			
+		}
+	},
 	methods:{
 		saveSupplier:function(){
 			var self=this;
@@ -46,7 +56,7 @@ new Vue({
 						self.supplierName=result.data.supplierName;
 						self.supplierLink=result.data.supplierLink;
 						self.note=result.data.note;
-						
+						layer.msg('保存成功');
 			});
 		},
 		newSupplier:function(){
