@@ -1,0 +1,111 @@
+<div id="customerEdit">
+	<form>
+		<input type="hidden" v-model.trim="customer.customerId"/>
+	  <div class="form-group row">
+	    <label for="customer.customerNikeName" class="col-sm-2 col-form-label">网名:</label>
+	    <input type="text" class="form-control col-sm-10"  v-model.trim="customer.customerNikeName"/>
+	  </div>
+	  <div class="form-group row">
+	    <label for="customer.customerName" class="col-sm-2 col-form-label">姓名:</label>
+	    <input type="text" class="form-control col-sm-10"  v-model.trim="customer.customerName"/>
+	  </div>
+	  <div class="form-group row">
+	    <label for="customer.customerCountry" class="col-sm-2 col-form-label">国家:</label>
+	    <input type="text" class="form-control col-sm-10"  v-model.trim="customer.customerCountry"/>
+	  </div>
+	  <div class="form-group row">
+	    <label for="customer.customerEmail" class="col-sm-2 col-form-label">邮箱:</label>
+	    <input type="text" class="form-control col-sm-10"  v-model.trim="customer.customerEmail"/>
+	  </div>
+	  <div class="form-group row">
+	    <label for="customer.customerAddress" class="col-sm-2 col-form-label">地址:</label>
+	    <input type="text" class="form-control col-sm-10"  v-model.trim="customer.customerAddress"/>
+	  </div>
+	  <div class="form-group row">
+	    <label for="customer.customerTel" class="col-sm-2 col-form-label">电话:</label>
+	    <input type="text" class="form-control col-sm-10"  v-model.trim="customer.customerTel"/>
+	  </div>
+	  <div class="form-group row">
+	    <label for="customer.customerPostCode" class="col-sm-2 col-form-label">邮编:</label>
+	    <input type="text" class="form-control col-sm-10"  v-model.trim="customer.customerPostCode"/>
+	  </div>
+	  <div class="form-group row">
+	    <label for="customer.note" class="col-sm-2 col-form-label">备注:</label>
+	    <input type="text" class="form-control col-sm-10"  v-model.trim="customer.note"/>
+	  </div>
+	  <button @click="newCustomer">新建</button>
+	  <button @click.prevent="saveCustomer">保存</button>
+	 <button @click.prevent="closeCustomer">取消</button>
+	</form>
+</div>
+<script>
+<!--
+
+//-->
+
+new Vue({
+	el:"#customerEdit",
+	data:{
+		customer:{
+			customerId:-1,
+			customerNikeName:"",
+			customerName:"",
+			customerCountry:"",
+			customerEmail:"",
+			customerAddress:"",
+			customerTel:"",
+			customerPostCode:"",
+			note:""
+		},
+		currentIndex:-1
+	},
+	created:function(){
+		var customer=JSON.parse(sessionStorage.getItem('customer'));
+		if(customer!=null){
+			this.customer=customer;
+		}
+	},
+	methods:{
+		newCustomer:function(){
+			this.customer={
+				customerId:-1,
+				customerNikeName:"",
+				customerName:"",
+				customerCountry:"",
+				customerEmail:"",
+				customerAddress:"",
+				customerTel:"",
+				customerPostCode:"",
+				note:""
+			};
+		},
+		closeCustomer:function(){
+			history.back();
+		},
+		saveCustomer:function(){
+			var self=this;
+			axios({
+				method: 'POST',
+				headers: { 'content-type': 'application/x-www-form-urlencoded' },
+				url:'/customer/save',
+				params:{
+					customerId:self.customer.customerId,
+					customerNikeName:self.customer.customerNikeName,
+					customerName:self.customer.customerName,
+					customerCountry:self.customer.customerCountry,
+					customerEmail:self.customer.customerEmail,
+					customerAddress:self.customer.customerAddress,
+					customerTel:self.customer.customerTel,
+					customerPostCode:self.customer.customerPostCode,
+					note:self.customer.note
+				}
+			}).then(function(result){
+// 						console.log(result.data);
+						self.customer=result.data
+						layer.msg('保存成功');
+						sessionStorage.setItem('customer',null);
+			});
+		},
+	}
+});
+</script>

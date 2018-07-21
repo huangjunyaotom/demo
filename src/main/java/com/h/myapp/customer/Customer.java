@@ -20,6 +20,7 @@ public class Customer implements Serializable{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer customerId;
 	@Column(nullable=false)
+	//网名
 	private String customerNikeName;
 	private String customerName;
 	private String customerCountry;

@@ -89,6 +89,7 @@ var vm=new Vue({
 			var self=this;
 			if(self.currentId<0){
 				layer.alert('请先选择一条记录');
+				return false;
 			}else{
 				axios.get('/supplier/count/'+self.currentId)
 				.then(function(result){
@@ -116,14 +117,15 @@ var vm=new Vue({
 			
 		},
 		newSupplier:function(){
-			window.location.href='supplier/new';
+			window.location.href='/supplier/new';
 		},
 		editSupplier:function(){
 			if(this.currentId<0){
 				layer.alert('请先选择一条记录');
+				return false;
 			}else{
 				sessionStorage.setItem('supplier',JSON.stringify(this.supplierList[this.currentIndex]));
-				window.location.href='supplier/new';
+				window.location.href='/supplier/new';
 			}
 			
 		}

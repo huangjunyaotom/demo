@@ -1,0 +1,123 @@
+<div id="customerManager">
+	<div class="row">
+		<div class="row">
+		<div>
+			<select v-model="searchType" class="form-control">
+				<option value="" selected>选择查询方式</option>
+				<option value="byNikeName" >按网名查询</option>
+				<option value="byName" >按姓名查询</option>
+				<option value="byCountry" >按国家查询</option>
+				<option value="byEmail" >按邮箱查询</option>
+			</select>
+			<input v-model="param"/>
+			<button @click="search">搜索</button>
+		</div>
+		<div class="btn-group" role="group" aria-label="Basic example">
+		  <button type="button" class="btn btn-secondary" @click="newSupplier">新建</button>
+		  <button type="button" class="btn btn-secondary" @click="editSupplier">编辑</button>
+		  <button type="button" class="btn btn-secondary" @click="deleteSupplier">删除</button>
+		  <button type="button" class="btn btn-secondary" >导出</button>
+		</div>
+	</div>
+	</div>
+	<div class="row">
+		<table class="table table_hover table_bordered">
+			<thead>
+					<tr>
+						<th>网名</th>
+						<th>姓名</th>
+						<th>国家</th>
+						<th>邮箱</th>
+						<th>地址</th>
+						<th>电话</th>
+						<th>邮编</th>
+						<th>备注</th>
+					</tr>
+			</thead>
+			<tbody>
+				<tr  v-for='(customer,index) in customerList'  
+					@click="change(index)" 
+					:class="{'table-info': currentIndex == index }">
+					<th>{{customer.customerNikeName}}</th>
+					<th>{{customer.customerName}}</th>
+					<th>{{customer.customerCountry}}</th>
+					<th>{{customer.customerEmail}}</th>
+					<th>{{customer.customerAddress}}</th>
+					<th>{{customer.customerTel}}</th>
+					<th>{{customer.customerPostCode}}</th>
+					<th>{{customer.note}}</th>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="row">
+		<ul class="pagination">
+				<li class="page-item" 
+				v-for="page in pageList"
+				><a class="page-link" v-bind:href="page.link" v-on:click.prevent="getCustomerList(page.link)">{{page.name}}</a>
+				</li>
+				
+		</ul>
+	</div>
+</div>
+<script>
+var vm=new Vue({
+	el:'#customerManager',
+	data:{
+		customerList:[],
+		pageList:[],
+		currentIndex:-1,
+		searchType:"",
+		param:""
+	},
+	created:function(){
+		var self=this;
+		axios.get('/customer/toPage/0').then(function(result){
+			self.setResult(result.data);
+		});
+	},
+	methods:{
+		setResult:function(result){
+			this.customerList=result.resultList;
+			this.pageList=[
+				{link:result.firstPage,name:'首页'},
+				{link:result.prePage,name:'上一页'},
+				{link:result.nextPage,name:'下一页'},
+				{link:result.lastPage,name:'尾页'}
+			];
+		},
+		getCustomerList:function(link){
+			var self = this; 
+			axios.get(link).then(function(result){
+				self.setResult(result.data);
+			});
+		},
+		search:function(){
+// 			console.log(this.searchType);
+		},
+		change:function(index){
+			this.currentIndex=index;
+		},
+		newSupplier:function(){
+			window.location.href='/customer/new';
+		},
+		editSupplier:function(){
+			var self=this;
+			if(self.currentIndex<0){
+				layer.alert('请先选择一行');
+				return false;
+			}
+			sessionStorage.setItem('customer',JSON.stringify(this.supplierList[this.currentIndex]));
+			window.location.href='/customer/new';
+		},
+		deleteSupplier:function(){
+			var self=this;
+			if(self.currentIndex<0){
+				layer.alert('请先选择一行');
+				return false;
+			}
+			//执行订单检查,若有订单,则禁止删除
+		}
+	}
+});
+</script>
