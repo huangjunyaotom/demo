@@ -57,6 +57,7 @@ new Vue({
 						self.supplierLink=result.data.supplierLink;
 						self.note=result.data.note;
 						layer.msg('保存成功');
+						sessionStorage.setItem('supplier',null);
 			});
 		},
 		newSupplier:function(){
