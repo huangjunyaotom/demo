@@ -40,9 +40,9 @@
 
 Vue.component('nav-detail',{
 	props:['item'],
-	template:'<li class="nav-item dropdown" >\
-				<a class="nav-link" v-bind:href="item.href" >{{item.name}}</a>\
-			  </li>'
+	template:`<li class="nav-item dropdown" >
+				<a class="nav-link" v-bind:href="item.href" >{{item.name}}</a>
+			  </li>`
 });
 
 new Vue({
