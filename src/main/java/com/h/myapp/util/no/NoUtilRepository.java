@@ -1,4 +1,4 @@
-package com.h.myapp.util;
+package com.h.myapp.util.no;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

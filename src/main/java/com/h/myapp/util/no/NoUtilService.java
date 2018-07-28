@@ -1,4 +1,4 @@
-package com.h.myapp.util;
+package com.h.myapp.util.no;
 
 public interface NoUtilService {
 	String getUUID();

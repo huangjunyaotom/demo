@@ -9,14 +9,14 @@
 				<option value="byCountry" >按国家查询</option>
 				<option value="byEmail" >按邮箱查询</option>
 			</select>
-			<input v-model="param"/>
+			<input v-model.trim="param"/>
 			<button @click="search">搜索</button>
 		</div>
 		<div class="btn-group" role="group" aria-label="Basic example">
-		  <button type="button" class="btn btn-secondary" @click="newSupplier">新建</button>
-		  <button type="button" class="btn btn-secondary" @click="editSupplier">编辑</button>
-		  <button type="button" class="btn btn-secondary" @click="deleteSupplier">删除</button>
-		  <button type="button" class="btn btn-secondary" >导出</button>
+		  <button type="button" class="btn btn-secondary" @click="newCustomer">新建</button>
+		  <button type="button" class="btn btn-secondary" @click="editCustomer">编辑</button>
+		  <button type="button" class="btn btn-secondary" @click="deleteCustomer">删除</button>
+		  <button type="button" class="btn btn-secondary" @click="exportCustomer" >导出</button>
 		</div>
 	</div>
 	</div>
@@ -93,30 +93,61 @@ var vm=new Vue({
 			});
 		},
 		search:function(){
-// 			console.log(this.searchType);
+			var self = this; 
+			if(self.searchType==""){
+				layer.alert('你必须选择一种查询方式');
+				return false;
+			}
+			if(self.param.length==0){
+				layer.alert('你必须输入查询字段');
+				return false;
+			}
+			let url="/customer/toPage/0/by/"+self.searchType+"/search/"+self.param;
+			axios.get(url).then(result =>void self.setResult(result.data));
+
 		},
 		change:function(index){
 			this.currentIndex=index;
 		},
-		newSupplier:function(){
+		newCustomer:function(){
 			window.location.href='/customer/new';
 		},
-		editSupplier:function(){
+		editCustomer:function(){
 			var self=this;
 			if(self.currentIndex<0){
 				layer.alert('请先选择一行');
 				return false;
 			}
-			sessionStorage.setItem('customer',JSON.stringify(this.supplierList[this.currentIndex]));
+			sessionStorage.setItem('customer',JSON.stringify(self.customerList[self.currentIndex]));
 			window.location.href='/customer/new';
 		},
-		deleteSupplier:function(){
+		deleteCustomer:function(){
 			var self=this;
 			if(self.currentIndex<0){
 				layer.alert('请先选择一行');
 				return false;
 			}
 			//执行订单检查,若有订单,则禁止删除
+			let id=self.customerList[self.currentIndex].customerId;
+			axios.get("/customer/count/"+id)
+				.then(function(result){
+					if(result.data>0){
+						layer.alert('存在'+result.data+'条关联订单,禁止删除');
+					}else{
+						axios.post("/customer/delete/"+id)
+							.then(result=> {
+								layer.msg(result.data);
+								self.customerList.splice(self.currentIndex,1);
+							});
+					}
+					
+				}
+			);
+		},
+		exportCustomer:function(){
+			let type=this.searchType;
+			let param=this.param;
+			//请求对应参数的表格;
 		}
 	}
 });

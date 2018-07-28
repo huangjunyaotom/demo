@@ -1,4 +1,4 @@
-package com.h.myapp.util;
+package com.h.myapp.util.no;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

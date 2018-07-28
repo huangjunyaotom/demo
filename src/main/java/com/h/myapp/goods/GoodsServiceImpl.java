@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.h.myapp.util.FileUtil;
-import com.h.myapp.util.NoUtilService;
+import com.h.myapp.util.no.NoUtilService;
 
 @Service
 public class GoodsServiceImpl implements GoodsService {
