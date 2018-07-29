@@ -9,7 +9,7 @@
 				<option value="byCountry" >按国家查询</option>
 				<option value="byEmail" >按邮箱查询</option>
 			</select>
-			<input v-model.trim="param"/>
+			<input v-model.trim="param" class="form-control"/>
 			<button @click="search">搜索</button>
 		</div>
 		<div class="btn-group" role="group" aria-label="Basic example">
@@ -104,7 +104,7 @@ var vm=new Vue({
 			}
 			let url="/customer/toPage/0/by/"+self.searchType+"/search/"+self.param;
 			axios.get(url).then(result =>void self.setResult(result.data));
-
+			self.param="";
 		},
 		change:function(index){
 			this.currentIndex=index;
@@ -145,9 +145,8 @@ var vm=new Vue({
 			);
 		},
 		exportCustomer:function(){
-			let type=this.searchType;
-			let param=this.param;
-			//请求对应参数的表格;
+			let url=this.pageList[3].link+"/excel";
+			window.location.href = url;
 		}
 	}
 });
