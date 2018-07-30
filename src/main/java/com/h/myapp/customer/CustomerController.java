@@ -57,7 +57,12 @@ public class CustomerController {
 	public Integer countOrder(@PathVariable("id") Integer id){
 		return customerService.getOrderNum(id);
 	}
-
+	@GetMapping("/{nikeName}")
+	@ResponseBody
+	public List<Customer> findByNikeName(@PathVariable String nikeName) {
+		return customerService.findByNikeName(nikeName);
+	}
+	
 	@PostMapping("/save")
 	@ResponseBody
 	public Customer save(Customer customer){

@@ -40,15 +40,24 @@ public class Order implements Serializable {
 
 	private String orderName;
 	private String orderCountry;
+	private String orderEmail;
+	public String getOrderEmail() {
+		return orderEmail;
+	}
+
+	public void setOrderEmail(String orderEmail) {
+		this.orderEmail = orderEmail;
+	}
+
 	private String orderTel;
 	private String orderAddress;
 	private String orderPostCode;
 	private String orderPostType;
 	private String orderPostNo;
 	private String note="";
-	private Double orderMoney;
+	private Double orderPostMoney;
 	//待审核,待发货,已发货,已取消
-	private String orderStatus="待审核";
+	private String orderStatus="待发货";
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	private Date orderDate;
@@ -140,12 +149,12 @@ public class Order implements Serializable {
 		this.note = note;
 	}
 
-	public Double getOrderMoney() {
-		return orderMoney;
+	public Double getOrderPostMoney() {
+		return orderPostMoney;
 	}
 
-	public void setOrderMoney(Double orderMoney) {
-		this.orderMoney = orderMoney;
+	public void setOrderPostMoney(Double orderPostMoney) {
+		this.orderPostMoney = orderPostMoney;
 	}
 
 	public Date getOrderDate() {
@@ -191,13 +200,15 @@ public class Order implements Serializable {
 		return true;
 	}
 
+	
+
 	@Override
 	public String toString() {
 		return "Order [orderId=" + orderId + ", customer=" + customer + ", orderName=" + orderName + ", orderCountry="
-				+ orderCountry + ", orderTel=" + orderTel + ", orderAddress=" + orderAddress + ", orderPostCode="
-				+ orderPostCode + ", orderPostType=" + orderPostType + ", orderPostNo=" + orderPostNo + ", note=" + note
-				+ ", orderMoney=" + orderMoney + ", orderStatus=" + orderStatus + ", orderDate=" + orderDate
-				+ ", orderDetails=" + orderDetails + "]";
+				+ orderCountry + ", orderEmail=" + orderEmail + ", orderTel=" + orderTel + ", orderAddress="
+				+ orderAddress + ", orderPostCode=" + orderPostCode + ", orderPostType=" + orderPostType
+				+ ", orderPostNo=" + orderPostNo + ", note=" + note + ", orderPostMoney=" + orderPostMoney
+				+ ", orderStatus=" + orderStatus + ", orderDate=" + orderDate + ", orderDetails=" + orderDetails + "]";
 	}
 
 	public String getOrderStatus() {

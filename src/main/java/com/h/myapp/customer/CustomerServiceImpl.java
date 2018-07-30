@@ -183,4 +183,11 @@ public class CustomerServiceImpl implements CustomerService {
 		ExportExcelUtils.exportExcel(response, "客户.xlsx", data);
 	}
 
+	@Override
+	public List<Customer> findByNikeName(String nikeName) {
+		// TODO Auto-generated method stub
+		Pageable pageable=PageRequest.of(0, 20, Direction.ASC, "customerId");
+		return customerRepository.findByCustomerNikeNameContaining(nikeName, pageable).getContent();
+	}
+
 }
