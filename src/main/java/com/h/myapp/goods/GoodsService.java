@@ -1,8 +1,9 @@
 package com.h.myapp.goods;
 
+import javax.servlet.http.Part;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface GoodsService {
 
@@ -16,6 +17,6 @@ public interface GoodsService {
 	Goods getOne(int id);
 
 	Goods saveInfo(Goods goods);
-	Goods savePic(Goods goods,MultipartFile file) throws Exception;
+	Goods savePic(Goods goods,Part file) throws Exception;
 	String deleteById(Integer goodsId);
 }

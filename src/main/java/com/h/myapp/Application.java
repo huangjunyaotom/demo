@@ -19,6 +19,6 @@ public class Application {
 	
 	@GetMapping("/")
 	public String menu() {
-		return "menu";
+		return "index";
 	}
 }

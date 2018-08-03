@@ -2,6 +2,7 @@ package com.h.myapp.goods;
 
 import java.io.File;
 
+import javax.servlet.http.Part;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.h.myapp.util.FileUtil;
 import com.h.myapp.util.no.NoUtilService;
@@ -71,11 +71,11 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Transactional
-	public Goods savePic(Goods goods, MultipartFile file) throws Exception {
+	public Goods savePic(Goods goods, Part file) throws Exception {
 		// TODO Auto-generated method stub
 		goods = goodsRepository.getOne(goods.getGoodsId());
 		String exitFile = goods.getGoodsPic();
-		if (!file.isEmpty()) {
+		if (file.getSize()>0) {
 			// 如果文件不为空,则上传文件,如果已有文件,则删除旧的
 			if (exitFile != null && exitFile.length() > 0) {
 				File exit = new File(savePath + exitFile.substring(1));
@@ -83,12 +83,12 @@ public class GoodsServiceImpl implements GoodsService {
 					exit.delete();
 				}
 			}
-			String fileType = file.getOriginalFilename().split("\\.")[1];
+			String fileType = file.getSubmittedFileName().split("\\.")[1];
 			String fileName = noUtilService.getUUID() + "." + fileType;
 
 			FileUtil.save(savePath + "image/", fileName, file);
 
-			goods.setGoodsPic("/image/" + fileName);
+			goods.setGoodsPic("http://localhost:8080/image/" + fileName);
 		}
 
 		return goodsRepository.save(goods);

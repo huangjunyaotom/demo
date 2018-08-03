@@ -1,5 +1,9 @@
 package com.h.myapp.goods;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.Part;
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @Scope("prototype")
@@ -22,25 +25,16 @@ public class GoodsController {
 	private GoodsService goodsService;
 
 	// 展示所有产品,第一页
-	@GetMapping("")
-	public String show(Model model) {
-
-		return toPage(0, model);
-	}
-
+	
 	@GetMapping("/toPage/{toPage}")
-	public String toPage(@PathVariable("toPage") Integer toPage, Model model) {
-
-		Page<Goods> page = goodsService.findAllToPage(toPage);
-		int totalPage = page.getTotalPages() - 1;
-
-		model.addAttribute("goodsList", page.getContent());
-		model.addAttribute("menuShow", "/goods/manager.html");
-		model.addAttribute("firstPage", "/goods/toPage/0");
-		model.addAttribute("prePage", "/goods/toPage/" + (toPage > 0 ? toPage - 1 : toPage));
-		model.addAttribute("nextPage", "/goods/toPage/" + (toPage < totalPage ? toPage + 1 : totalPage));
-		model.addAttribute("lastPage", "/goods/toPage/" + totalPage);
-		return "menu";
+	@ResponseBody
+	public Map<String,Object> toPage(@PathVariable Integer toPage) {
+		Map<String, Object> map=new HashMap<String, Object>();	
+		Page<Goods> page = goodsService.findAllToPage(toPage-1);
+		int totalPage = page.getTotalPages();
+		map.put("list", page.getContent());
+		map.put("totalPage", totalPage);
+		return map;
 	}
 	@GetMapping("/toPage/{toPage}/search/{param}")
 	public String toPageSearch(@PathVariable Integer toPage,@PathVariable String param,Model model) {
@@ -85,14 +79,14 @@ public class GoodsController {
 		return "menu";
 	}
 	@PostMapping("/save/pic")
-	public String savePic(Goods goods,@PathParam("file") MultipartFile file, Model model) throws Exception {
+	public String savePic(Goods goods,@PathParam("file") Part file, Model model) throws Exception {
 		model.addAttribute("goods", goodsService.savePic(goods,file));
 		model.addAttribute("menuShow", "/goods/edit.html");
 		return "menu";
 	}
 	
 	@GetMapping("/edit/{goodsId}")
-	public String edit(@PathVariable("goodsId")Integer goodsId,Model model) {
+	public String edit(@PathVariable Integer goodsId,Model model) {
 		
 		model.addAttribute("goods", goodsService.getOne(goodsId));
 		model.addAttribute("menuShow", "/goods/edit.html");
@@ -107,7 +101,7 @@ public class GoodsController {
 	
 	@GetMapping("/delete/{goodsId}")
 	@ResponseBody
-	public String delete(@PathVariable("goodsId") Integer goodsId) {
+	public String delete(@PathVariable Integer goodsId) {
 		return goodsService.deleteById(goodsId);
 		
 	}

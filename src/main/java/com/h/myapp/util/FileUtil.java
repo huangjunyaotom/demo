@@ -2,17 +2,16 @@ package com.h.myapp.util;
 
 import java.io.File;
 
-import org.springframework.web.multipart.MultipartFile;
+import javax.servlet.http.Part;
 
 public class FileUtil {
 
-	public static String save(String savePath, String fileName, MultipartFile file) throws Exception {
+	public static String save(String savePath, String fileName, Part file) throws Exception {
 		File targetFile = new File(savePath);
 		if (!targetFile.exists()) {
 			targetFile.mkdirs();
 		}
-		File f=new File(savePath+fileName);
-		file.transferTo(f);
+		file.write((savePath+fileName));
 
 		return "success";
 	}
