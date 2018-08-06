@@ -1,6 +1,7 @@
 package com.h.myapp.goods;
 
 import java.io.File;
+import java.util.List;
 
 import javax.servlet.http.Part;
 import javax.transaction.Transactional;
@@ -13,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.h.myapp.goodsandsupplier.GoodsAndSupplier;
+import com.h.myapp.goodsandsupplier.GoodsAndSupplierRepository;
 import com.h.myapp.util.FileUtil;
 import com.h.myapp.util.no.NoUtilService;
 
@@ -21,6 +24,8 @@ public class GoodsServiceImpl implements GoodsService {
 
 	@Autowired
 	private GoodsRepository goodsRepository;
+	@Autowired
+	private GoodsAndSupplierRepository goodsAndSupplierRepository;
 	@Autowired
 	private NoUtilService noUtilService;
 	@Value("${my.savePath}")
@@ -75,7 +80,7 @@ public class GoodsServiceImpl implements GoodsService {
 		// TODO Auto-generated method stub
 		goods = goodsRepository.getOne(goods.getGoodsId());
 		String exitFile = goods.getGoodsPic();
-		if (file.getSize()>0) {
+		if (file.getSize() > 0) {
 			// 如果文件不为空,则上传文件,如果已有文件,则删除旧的
 			if (exitFile != null && exitFile.length() > 0) {
 				File exit = new File(savePath + exitFile.substring(1));
@@ -120,5 +125,12 @@ public class GoodsServiceImpl implements GoodsService {
 		// TODO Auto-generated method stub
 		checkGoods(goods);
 		return goodsRepository.save(goods);
+	}
+
+//////////新的api
+	@Override
+	public List<GoodsAndSupplier> getSupplier(Integer goodsId) {
+		// TODO Auto-generated method stub
+		return goodsAndSupplierRepository.findByGoods_goodsId(goodsId);
 	}
 }

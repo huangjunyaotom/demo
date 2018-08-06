@@ -1,9 +1,13 @@
 package com.h.myapp.goods;
 
+import java.util.List;
+
 import javax.servlet.http.Part;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import com.h.myapp.goodsandsupplier.GoodsAndSupplier;
 
 public interface GoodsService {
 
@@ -19,4 +23,6 @@ public interface GoodsService {
 	Goods saveInfo(Goods goods);
 	Goods savePic(Goods goods,Part file) throws Exception;
 	String deleteById(Integer goodsId);
+	
+	List<GoodsAndSupplier> getSupplier(Integer goodsId);
 }

@@ -1,6 +1,7 @@
 package com.h.myapp.goods;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Part;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.h.myapp.goodsandsupplier.GoodsAndSupplier;
 
 @Controller
 @Scope("prototype")
@@ -36,6 +39,14 @@ public class GoodsController {
 		map.put("totalPage", totalPage);
 		return map;
 	}
+	@GetMapping("/{goodsId}/getSupplier")
+	@ResponseBody
+	public List<GoodsAndSupplier> getSupplier(@PathVariable Integer goodsId){
+		return goodsService.getSupplier(goodsId);
+	}
+	
+	
+	////////////旧的api
 	@GetMapping("/toPage/{toPage}/search/{param}")
 	public String toPageSearch(@PathVariable Integer toPage,@PathVariable String param,Model model) {
 		Page<Goods> page = goodsService.search(toPage, param);
@@ -51,6 +62,7 @@ public class GoodsController {
 		return "menu";
 		
 	}
+	
 	@GetMapping("/search")
 	public String search(Integer toPage,String param,Model model) {
 		Page<Goods> page = goodsService.search(toPage, param);
