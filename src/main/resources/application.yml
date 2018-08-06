@@ -17,9 +17,6 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://localhost:3306/qcode?useSSL=false&useUnicode=true&characterEncoding=utf8
     username: root
-  freemarker:
-    charset: utf-8
-    suffix: .html
   jpa:
     database: MYSQL
     hibernate:

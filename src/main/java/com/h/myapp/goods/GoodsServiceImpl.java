@@ -1,7 +1,9 @@
 package com.h.myapp.goods;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.Part;
 import javax.transaction.Transactional;
@@ -10,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
@@ -46,35 +47,6 @@ public class GoodsServiceImpl implements GoodsService {
 		}
 	}
 
-	public Goods getOne(int id) {
-
-		if (goodsRepository.existsById(id)) {
-			return goodsRepository.getOne(id);
-		} else {
-			return null;
-		}
-
-	}
-
-	public Page<Goods> findAll(Pageable pageable) {
-		// TODO Auto-generated method stub
-		return goodsRepository.findAll(pageable);
-	}
-
-	public Page<Goods> findAllToPage(int toPage) {
-		// TODO Auto-generated method stub
-		return findAll(PageRequest.of(toPage, pageSize, Direction.ASC, "goodsId"));
-	}
-
-	public Page<Goods> search(String param, Pageable pageable) {
-		return goodsRepository.findByGoodsNameContainingOrGoodsNoContaining(param, param, pageable);
-	}
-
-	public Page<Goods> search(Integer toPage, String param) {
-		// TODO Auto-generated method stub
-		return search(param, PageRequest.of(toPage, pageSize, Direction.ASC, "goodsId"));
-	}
-
 	@Transactional
 	public Goods savePic(Goods goods, Part file) throws Exception {
 		// TODO Auto-generated method stub
@@ -100,7 +72,7 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Transactional
-	public String deleteById(Integer goodsId) {
+	public boolean deleteById(Integer goodsId) {
 		// TODO Auto-generated method stub
 		Goods goods = goodsRepository.getOne(goodsId);
 		if (null != goods) {
@@ -114,9 +86,9 @@ public class GoodsServiceImpl implements GoodsService {
 			}
 
 			goodsRepository.delete(goods);
-			return "删除成功";
+			return true;
 		}
-		return "删除失败";
+		return false;
 	}
 
 	@Override
@@ -127,10 +99,32 @@ public class GoodsServiceImpl implements GoodsService {
 		return goodsRepository.save(goods);
 	}
 
-//////////新的api
 	@Override
 	public List<GoodsAndSupplier> getSupplier(Integer goodsId) {
 		// TODO Auto-generated method stub
 		return goodsAndSupplierRepository.findByGoods_goodsId(goodsId);
+	}
+
+	@Override
+	public Map<String, Object> toPage(int toPage) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<String, Object>();
+		Page<Goods> page = goodsRepository.findAll(PageRequest.of(toPage, pageSize, Direction.ASC, "goodsId"));
+		int totalPage = page.getTotalPages();
+		map.put("list", page.getContent());
+		map.put("totalPage", totalPage);
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> toPageSearch(Integer toPage, String param) {
+		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<String, Object>();
+		Page<Goods> page = goodsRepository.findByGoodsNameContainingOrGoodsNoContaining(param, param,
+				PageRequest.of(toPage, pageSize, Direction.ASC, "goodsId"));
+		int totalPage = page.getTotalPages();
+		map.put("list", page.getContent());
+		map.put("totalPage", totalPage);
+		return null;
 	}
 }

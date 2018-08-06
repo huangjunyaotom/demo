@@ -1,13 +1,11 @@
 package com.h.myapp.supplier;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import java.util.Map;
 
 public interface SupplierService {
-	Page<Supplier> findAllToPage(int toPage);
-	Page<Supplier> search(String param,Pageable pageable);
-	Page<Supplier> search(Integer toPage,String param);
+	Map<String,Object> toPage(int toPage);
+	Map<String,Object> toPageSearch(Integer toPage,String param);
 	Integer countGoods(Integer supplierId);
-	String delete(Integer supplierId);
+	boolean delete(Integer supplierId);
 	Supplier save(Supplier supplier);
 }

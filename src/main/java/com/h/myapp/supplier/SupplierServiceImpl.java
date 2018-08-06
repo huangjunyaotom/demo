@@ -1,12 +1,14 @@
 package com.h.myapp.supplier;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
@@ -22,21 +24,29 @@ public class SupplierServiceImpl implements SupplierService {
 	@Value("${my.defaultPageSize}")
 	private Integer pageSize;
 	@Override
-	public Page<Supplier> findAllToPage(int toPage) {
+	public Map<String,Object> toPage(int toPage) {
 		// TODO Auto-generated method stub
-		return supplierRepository.findAll(PageRequest.of(toPage, pageSize, Direction.ASC, "supplierId"));
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		Page<Supplier> page = supplierRepository.findAll(PageRequest.of(toPage, pageSize, Direction.ASC, "supplierId"));
+		int totalPage = page.getTotalPages();
+		map.put("list", page.getContent());
+		map.put("totalPage", totalPage);
+		return map;
 	}
 
-	@Override
-	public Page<Supplier> search(Integer toPage, String param) {
-		// TODO Auto-generated method stub
-		return search(param, PageRequest.of(toPage, pageSize, Direction.ASC, "supplierId"));
-	}
+
 
 	@Override
-	public Page<Supplier> search(String param, Pageable pageable) {
+	public Map<String,Object> toPageSearch(Integer toPage,String param) {
 		// TODO Auto-generated method stub
-		return supplierRepository.findBySupplierNameContaining(param, pageable);
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		Page<Supplier> page = supplierRepository.findBySupplierNameContaining(param, PageRequest.of(toPage, pageSize, Direction.ASC, "supplierId"));
+		int totalPage = page.getTotalPages();
+		map.put("list", page.getContent());
+		map.put("totalPage", totalPage);
+		return map; 
 	}
 
 	@Override
@@ -53,10 +63,10 @@ public class SupplierServiceImpl implements SupplierService {
 	}
 
 	@Override
-	public String delete(Integer supplierId) {
+	public boolean delete(Integer supplierId) {
 		// TODO Auto-generated method stub
 		supplierRepository.deleteById(supplierId);
-		return "删除成功";
+		return true;
 	}
 
 }

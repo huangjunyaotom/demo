@@ -1,6 +1,8 @@
 package com.h.myapp.goodsandsupplier;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -27,10 +29,10 @@ public class GoodsAndSupplierServiceImpl implements GoodsAndSupplierService {
 
 	@Override
 	@Transactional
-	public String deleteByid(Integer id) {
+	public boolean deleteByid(Integer id) {
 		// TODO Auto-generated method stub
 		goodsAndSupplierRepository.deleteById(id);
-		return "删除成功";
+		return true;
 	}
 
 	@Override
@@ -41,39 +43,30 @@ public class GoodsAndSupplierServiceImpl implements GoodsAndSupplierService {
 	}
 
 	@Override
-	public Result<GoodsAndSupplier> toPage(Integer toPage) {
+	public Map<String, Object> toPage(Integer toPage) {
 		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<String, Object>();
+
 		Page<GoodsAndSupplier> page = goodsAndSupplierRepository
 				.findAll(PageRequest.of(toPage, pageSize, Direction.ASC, "goodsandsupplierId"));
-		int totalPage = page.getTotalPages() - 1;
-		Result<GoodsAndSupplier> result = new Result<GoodsAndSupplier>();
-
-		result.setResultList(page.getContent());
-		result.setFirstPage("/goodsAndSupplier/toPage/0");
-		result.setPrePage("/goodsAndSupplier/toPage/" + (toPage > 0 ? toPage - 1 : toPage));
-		result.setNextPage("/goodsAndSupplier/toPage/" + (toPage < totalPage ? toPage + 1 : totalPage));
-		result.setLastPage("/goodsAndSupplier/toPage/" + totalPage);
-
-		return result;
+		int totalPage = page.getTotalPages();
+		map.put("list", page.getContent());
+		map.put("totalPage", totalPage);
+		return map;
 	}
 
 	@Override
-	public Result<GoodsAndSupplier> search(Integer toPage, String param) {
+	public Map<String, Object> search(Integer toPage, String param) {
 		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<String, Object>();
 		Page<GoodsAndSupplier> page = goodsAndSupplierRepository
 				.findByGoods_goodsNoContainingOrGoods_goodsNameContainingOrSupplier_supplierNameContaining(param, param,
 						param, PageRequest.of(toPage, pageSize, Direction.ASC, "goodsandsupplierId"));
 
-		int totalPage = page.getTotalPages() - 1;
-		Result<GoodsAndSupplier> result = new Result<GoodsAndSupplier>();
-
-		result.setResultList(page.getContent());
-		result.setFirstPage("/goodsAndSupplier/toPage/0/search/"+param);
-		result.setPrePage("/goodsAndSupplier/toPage/" + (toPage > 0 ? toPage - 1 : toPage)+"/search/"+param);
-		result.setNextPage("/goodsAndSupplier/toPage/" + (toPage < totalPage ? toPage + 1 : totalPage)+"/search/"+param);
-		result.setLastPage("/goodsAndSupplier/toPage/" + totalPage+"/search/"+param);
-
-		return result;
+		int totalPage = page.getTotalPages();
+		map.put("list", page.getContent());
+		map.put("totalPage", totalPage);
+		return map;
 	}
 
 }

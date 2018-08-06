@@ -56,8 +56,8 @@ public class Order implements Serializable {
 	private String orderPostNo;
 	private String note="";
 	private Double orderPostMoney;
-	//待审核,待发货,已发货,已取消
-	private String orderStatus="待发货";
+	//0待采购,1待发货,2已发货,3已取消
+	private Integer orderStatus=0;
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	private Date orderDate;
@@ -211,11 +211,11 @@ public class Order implements Serializable {
 				+ ", orderStatus=" + orderStatus + ", orderDate=" + orderDate + ", orderDetails=" + orderDetails + "]";
 	}
 
-	public String getOrderStatus() {
+	public Integer getOrderStatus() {
 		return orderStatus;
 	}
 
-	public void setOrderStatus(String orderStatus) {
+	public void setOrderStatus(Integer orderStatus) {
 		this.orderStatus = orderStatus;
 	}
 

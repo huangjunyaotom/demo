@@ -1,7 +1,9 @@
 package com.h.myapp.customer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -34,23 +36,20 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Result<Customer> toPage(Integer toPage) {
+	public Map<String,Object> toPage(Integer toPage) {
 		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<String, Object>();
 		Page<Customer> page = customerRepository.findAll(PageRequest.of(toPage, pageSize, Direction.ASC, "customerId"));
-		int totalPage = page.getTotalPages() - 1;
-		Result<Customer> result = new Result<Customer>();
-
-		result.setResultList(page.getContent());
-		result.setFirstPage("/customer/toPage/0");
-		result.setPrePage("/customer/toPage/" + (toPage > 0 ? toPage - 1 : toPage));
-		result.setNextPage("/customer/toPage/" + (toPage < totalPage ? toPage + 1 : totalPage));
-		result.setLastPage("/customer/toPage/" + totalPage);
-		return result;
+		int totalPage = page.getTotalPages();
+		map.put("list", page.getContent());
+		map.put("totalPage", totalPage);
+		return map;
 	}
 
 	@Override
-	public Result<Customer> search(Integer toPage,String type, String param) {
+	public Map<String,Object> search(Integer toPage,String type, String param) {
 		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<String, Object>();
 		Page<Customer> page=null;
 		Pageable pageable=PageRequest.of(toPage, pageSize, Direction.ASC, "customerId");
 		switch(type){
@@ -68,22 +67,17 @@ public class CustomerServiceImpl implements CustomerService {
 			break;
 		}
 		
-		int totalPage = page.getTotalPages() - 1;
-		Result<Customer> result = new Result<Customer>();
-
-		result.setResultList(page.getContent());
-		result.setFirstPage("/customer/toPage/0/by/"+type+"/search/"+param);
-		result.setPrePage("/customer/toPage/" + (toPage > 0 ? toPage - 1 : toPage)+"/by/"+type+"/search/"+param);
-		result.setNextPage("/customer/toPage/" + (toPage < totalPage ? toPage + 1 : totalPage)+"/by/"+type+"/search/"+param);
-		result.setLastPage("/customer/toPage/" + totalPage+"/by/"+type+"/search/"+param);
-		return result;
+		int totalPage = page.getTotalPages();
+		map.put("list", page.getContent());
+		map.put("totalPage", totalPage);
+		return map;
 	}
 
 	@Override
-	public String delete(Integer id) {
+	public boolean delete(Integer id) {
 		// TODO Auto-generated method stub
 		customerRepository.deleteById(id);
-		return "删除成功";
+		return true;
 	}
 
 	@Override

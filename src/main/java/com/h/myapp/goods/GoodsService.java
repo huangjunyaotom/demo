@@ -1,28 +1,24 @@
 package com.h.myapp.goods;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.Part;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import com.h.myapp.goodsandsupplier.GoodsAndSupplier;
 
 public interface GoodsService {
 
+	Map<String, Object> toPage(int toPage);
 
-	Page<Goods> findAll(Pageable pageable);
+	Map<String, Object> toPageSearch(Integer toPage, String param);
 
-	Page<Goods> findAllToPage(int toPage);
-
-	Page<Goods> search(String param,Pageable pageable);
-	Page<Goods> search(Integer toPage,String param);
-	Goods getOne(int id);
+	boolean deleteById(Integer goodsId);
 
 	Goods saveInfo(Goods goods);
-	Goods savePic(Goods goods,Part file) throws Exception;
-	String deleteById(Integer goodsId);
-	
+
+	Goods savePic(Goods goods, Part file) throws Exception;
+
 	List<GoodsAndSupplier> getSupplier(Integer goodsId);
+
 }
