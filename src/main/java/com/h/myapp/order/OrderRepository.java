@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository;
 public interface OrderRepository extends JpaRepository<Order,Integer> {
 
 	Integer countByCustomer_customerId(Integer customerId);
-	boolean updateOrderStatusById(int id,int orderStatus);
 }

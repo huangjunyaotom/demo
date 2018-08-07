@@ -21,7 +21,9 @@ public class OrderServerImpl implements OrderService {
 	@Transactional
 	public boolean changeStatus(int id, int status) {
 		// TODO Auto-generated method stub
-		orderRespository.updateOrderStatusById(id, status);
+		 Order order=orderRespository.getOne(id);
+		 order.setOrderStatus(status);
+		 orderRespository.save(order);
 		return true;
 	}
 	@Override

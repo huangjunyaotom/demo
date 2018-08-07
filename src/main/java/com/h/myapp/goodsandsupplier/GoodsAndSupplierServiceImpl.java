@@ -13,8 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import com.h.myapp.util.Result;
-
 @Service
 public class GoodsAndSupplierServiceImpl implements GoodsAndSupplierService {
 	@Autowired
