@@ -177,7 +177,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public List<Customer> findByNikeName(String nikeName) {
+	public List<Customer> findByNikeNameContaining(String nikeName) {
 		// TODO Auto-generated method stub
 		Pageable pageable=PageRequest.of(0, 20, Direction.ASC, "customerId");
 		return customerRepository.findByCustomerNikeNameContaining(nikeName, pageable).getContent();

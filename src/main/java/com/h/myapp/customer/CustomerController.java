@@ -45,7 +45,7 @@ public class CustomerController {
 	@GetMapping("/{nikeName}")
 	
 	public List<Customer> findByNikeName(@PathVariable String nikeName) {
-		return customerService.findByNikeName(nikeName);
+		return customerService.findByNikeNameContaining(nikeName);
 	}
 	
 	@PostMapping("/save")

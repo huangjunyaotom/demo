@@ -13,5 +13,5 @@ public interface CustomerRepository extends JpaRepository<Customer,Integer> {
 	Page<Customer> findByCustomerEmailContaining(String customerEmail,Pageable pageable);
 	
 	
-	
+	Customer findByCustomerNikeName(String customerNikeName);
 }
