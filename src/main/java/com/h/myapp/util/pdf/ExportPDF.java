@@ -45,7 +45,7 @@ public class ExportPDF {
 		root.put("latestProduct", latest);
 		// put ``url'' and ``name'' into latest
 		latest.put("url", "products/greenmouse.html");
-		latest.put("name", "green mouse");
+		latest.put("name", "huang");
 		
 		Template temp = cfg.getTemplate("orderPdf.html");
 		StringWriter writer = new StringWriter();
