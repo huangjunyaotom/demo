@@ -37,7 +37,7 @@ public class Order implements Serializable {
 	@ManyToOne(targetEntity = Customer.class)
 	@JoinColumn(name = "customerId", referencedColumnName = "customerId", nullable = false)
 	private Customer customer;
-
+	private String orderNo;
 	private String orderName;
 	private String orderCountry;
 	private String orderEmail;
@@ -202,13 +202,24 @@ public class Order implements Serializable {
 
 	
 
+	
+
+	public String getOrderNo() {
+		return orderNo;
+	}
+
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
+	}
+
 	@Override
 	public String toString() {
-		return "Order [orderId=" + orderId + ", customer=" + customer + ", orderName=" + orderName + ", orderCountry="
-				+ orderCountry + ", orderEmail=" + orderEmail + ", orderTel=" + orderTel + ", orderAddress="
-				+ orderAddress + ", orderPostCode=" + orderPostCode + ", orderPostType=" + orderPostType
-				+ ", orderPostNo=" + orderPostNo + ", note=" + note + ", orderPostMoney=" + orderPostMoney
-				+ ", orderStatus=" + orderStatus + ", orderDate=" + orderDate + ", orderDetails=" + orderDetails + "]";
+		return "Order [orderId=" + orderId + ", customer=" + customer + ", orderNo=" + orderNo + ", orderName="
+				+ orderName + ", orderCountry=" + orderCountry + ", orderEmail=" + orderEmail + ", orderTel=" + orderTel
+				+ ", orderAddress=" + orderAddress + ", orderPostCode=" + orderPostCode + ", orderPostType="
+				+ orderPostType + ", orderPostNo=" + orderPostNo + ", note=" + note + ", orderPostMoney="
+				+ orderPostMoney + ", orderStatus=" + orderStatus + ", orderDate=" + orderDate + ", orderDetails="
+				+ orderDetails + "]";
 	}
 
 	public Integer getOrderStatus() {

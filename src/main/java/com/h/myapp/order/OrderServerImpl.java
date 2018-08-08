@@ -20,6 +20,10 @@ public class OrderServerImpl implements OrderService {
 	@Transactional
 	public Order save(Order order) {
 		// TODO Auto-generated method stub
+		if (order.getOrderNo() == null || order.getOrderNo().length() == 0) {
+			order.setOrderNo(noUtilService.getNo("Order"));
+		}
+		
 		Customer customer=customerRespository.findByCustomerNikeName(order.getCustomer().getCustomerNikeName());
 		if(customer == null) {
 			customer=new Customer();

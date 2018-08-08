@@ -27,40 +27,34 @@ public class GoodsController {
 	// 展示所有产品,第一页
 
 	@GetMapping("/toPage/{toPage}")
-	
+
 	public Map<String, Object> toPage(@PathVariable Integer toPage) {
-		return goodsService.toPage(toPage-1);
+		return goodsService.toPage(toPage - 1);
 	}
 
 	@GetMapping("/{goodsId}/getSupplier")
-	
+
 	public List<GoodsAndSupplier> getSupplierById(@PathVariable Integer goodsId) {
 		return goodsService.getSupplier(goodsId);
 	}
 
 	@PostMapping("/{goodsId}/delete")
-	
+
 	public boolean deleteGoodsById(@PathVariable Integer goodsId) {
 		return goodsService.deleteById(goodsId);
 	}
 
-	@PostMapping("/save/info")
-	
-	public Goods saveInfo(Goods goods) {
-		return goodsService.saveInfo(goods);
-	}
+	@PostMapping("/save")
 
-	@PostMapping("/save/pic")
-	
 	public Goods savePic(Goods goods, @PathParam("file") Part file) throws Exception {
-		return goodsService.savePic(goods, file);
+		return goodsService.save(goods, file);
 	}
 
 	//////////// 旧的api
 	@GetMapping("/toPage/{toPage}/search/{param}")
-	
+
 	public Map<String, Object> toPageSearch(@PathVariable Integer toPage, @PathVariable String param, Model model) {
-		return goodsService.toPageSearch(toPage-1, param);
+		return goodsService.toPageSearch(toPage - 1, param);
 
 	}
 

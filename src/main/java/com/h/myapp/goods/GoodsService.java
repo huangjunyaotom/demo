@@ -15,9 +15,7 @@ public interface GoodsService {
 
 	boolean deleteById(Integer goodsId);
 
-	Goods saveInfo(Goods goods);
-
-	Goods savePic(Goods goods, Part file) throws Exception;
+	Goods save(Goods goods, Part file) throws Exception;
 
 	List<GoodsAndSupplier> getSupplier(Integer goodsId);
 

@@ -34,42 +34,7 @@ public class GoodsServiceImpl implements GoodsService {
 	@Value("${my.defaultPageSize}")
 	private Integer pageSize;
 
-	private void checkGoods(Goods goods) {
-
-		if (goods.getGoodsId() != null) {
-			Goods exitGoods = goodsRepository.getOne(goods.getGoodsId());
-			goods.setGoodsAndSupplier(exitGoods.getGoodsAndSupplier());
-			goods.setGoodsPic(exitGoods.getGoodsPic());
-		}
-
-		if (goods.getGoodsNo() == null || goods.getGoodsNo().length() == 0) {
-			goods.setGoodsNo(noUtilService.getNo("Goods"));
-		}
-	}
-
-	@Transactional
-	public Goods savePic(Goods goods, Part file) throws Exception {
-		// TODO Auto-generated method stub
-		goods = goodsRepository.getOne(goods.getGoodsId());
-		String exitFile = goods.getGoodsPic();
-		if (file.getSize() > 0) {
-			// 如果文件不为空,则上传文件,如果已有文件,则删除旧的
-			if (exitFile != null && exitFile.length() > 0) {
-				File exit = new File(savePath + exitFile.substring(1));
-				if (exit.exists()) {
-					exit.delete();
-				}
-			}
-			String fileType = file.getSubmittedFileName().split("\\.")[1];
-			String fileName = noUtilService.getUUID() + "." + fileType;
-
-			FileUtil.save(savePath + "image/", fileName, file);
-
-			goods.setGoodsPic("http://localhost:8080/image/" + fileName);
-		}
-
-		return goodsRepository.save(goods);
-	}
+	
 
 	@Transactional
 	public boolean deleteById(Integer goodsId) {
@@ -91,14 +56,7 @@ public class GoodsServiceImpl implements GoodsService {
 		return false;
 	}
 
-	@Override
-	@Transactional
-	public Goods saveInfo(Goods goods) {
-		// TODO Auto-generated method stub
-		checkGoods(goods);
-		return goodsRepository.save(goods);
-	}
-
+	
 	@Override
 	public List<GoodsAndSupplier> getSupplier(Integer goodsId) {
 		// TODO Auto-generated method stub
@@ -126,5 +84,32 @@ public class GoodsServiceImpl implements GoodsService {
 		map.put("list", page.getContent());
 		map.put("totalPage", totalPage);
 		return null;
+	}
+
+	@Override
+	@Transactional
+	public Goods save(Goods goods, Part file) throws Exception {
+		// TODO Auto-generated method stub
+
+		if (goods.getGoodsNo() == null || goods.getGoodsNo().length() == 0) {
+			goods.setGoodsNo(noUtilService.getNo("Goods"));
+		}
+		String exitFile = goods.getGoodsPic();
+		if (file.getSize() > 0) {
+			// 如果文件不为空,则上传文件,如果已有文件,则删除旧的
+			if (exitFile != null && exitFile.length() > 0) {
+				File exit = new File(savePath + exitFile.substring(1));
+				if (exit.exists()) {
+					exit.delete();
+				}
+			}
+			String fileType = file.getSubmittedFileName().split("\\.")[1];
+			String fileName = noUtilService.getUUID() + "." + fileType;
+
+			FileUtil.save(savePath + "image/", fileName, file);
+
+			goods.setGoodsPic("http://localhost:8080/image/" + fileName);
+		}
+		return goodsRepository.save(goods);
 	}
 }
